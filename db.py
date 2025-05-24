@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from collections.abc import Iterable
 
 def connect():
-    client = MongoClient(r"mongodb+srv://theunbestdaniel:imdb123%21%40%23@cluster0.xsfhv3a.mongodb.net/hell_oworld")
+    client = MongoClient(r"mongodb+srv://theunbestdaniel:<PASSWORD>@cluster0.xsfhv3a.mongodb.net/hell_oworld")
 
     db = client["hell_oworld"]
     collection = db["hell_oworld"]
