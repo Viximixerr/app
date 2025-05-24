@@ -1,0 +1,6 @@
+fastapi[standard]
+pymango
+pydantic
+collections
+requests
+asyncio
