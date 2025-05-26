@@ -2,10 +2,10 @@ from datetime import datetime
 import asyncio
 import requests
 import json
-import time
-
+from data_collection import collect_data
 
 url = "url"
+user = 12312
 lim = 5
 send_list = []
 checkpoint_dir = ""
@@ -24,12 +24,17 @@ class Counter():
     def __call__(self):
         return self.send_time
 
-async def send_to_api():
-    await asyncio.sleep(3600)
+async def send_to_api(current_data):
+    now = datetime.now()
+    current_data["date_sent"] = now
+    current_data["user"] = user
+
     if len(send_list)==0:
         target = url + "/data/single/"
         data = current_data
     else:
+        for i in range(len(send_list)):
+            send_list[i]["date_sent"] = now
         target = url + "/data/multiple/"
         p = send_list + [current_data]
         data = {"data":p}
@@ -51,13 +56,11 @@ async def send_to_api():
             f.write(json.dumps(data))
         print("warning: send list is over the limit, something wrong with the network or server we are so done lmao")
 
-def collect_data():
-    pass # somehow collect the user data
-
-def package():
-    pass 
+async def package():
+    data_task = asyncio.create_task(collect_data())
+    await data_task
+    await send_to_api(data_task.result())
 
 if __name__ == "__main__":
     while True:
-        current_data = collect_data()
-        send_to_api()
+        asyncio.run(package())
